@@ -1,0 +1,282 @@
+$font-100: clamp(25px, 5vw, 48px);
+$font-50: clamp(25px, 5vw, 42px);
+$font-40: clamp(25px, 4vw, 36px);
+$font-25: clamp(12px, 2vw, 25px);
+$font-20: clamp(12px, 2vw, 20px);
+
+$line-100: 1;
+$line-50: 1;
+$line-40: 1.2;
+$line-25: 1.2;
+
+$padding-20: clamp(10px, 2vw, 20px);
+
+.popup {
+  padding: $padding-20;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  animation: fadeIn 0.3s ease-out;
+
+  &.closing {
+    animation: fadeOut 0.3s ease-out forwards;
+  }
+
+  &._4_for_3 {
+    .content {
+      @media screen and (max-width: 600px) {
+        max-height: fit-content !important;
+      }
+    }
+  }
+
+  .content {
+    background: #ffccb7;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 967px;
+    height: 100%;
+    max-height: 480px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    font-family: 'Poppins', sans-serif;
+    color: #750000;
+    overflow: hidden;
+
+    animation: popupOpen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    &.closing {
+      animation: popupClose 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+    }
+
+    @media screen and (max-width: 600px) {
+      flex-direction: column;
+      max-height: 460px;
+      max-width: 257px;
+    }
+
+    .close {
+      position: absolute;
+      right: 0;
+      top: 0;
+      cursor: pointer;
+      background: none;
+      border: none;
+      aspect-ratio: 1/1;
+
+      .mobile {
+        display: none;
+      }
+
+      @media screen and (max-width: 600px) {
+        .mobile {
+          display: block;
+        }
+
+        .desktop {
+          display: none;
+        }
+      }
+    }
+
+    .imageContainer {
+      display: flex;
+      width: 50%;
+
+      @media screen and (max-width: 600px) {
+        width: 100%;
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+        max-width: 100%;
+
+        &.mobile {
+          display: none;
+        }
+
+        @media screen and (max-width: 600px) {
+          &.mobile {
+            display: block;
+          }
+
+          &.desktop {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .deal {
+      padding: $padding-20;
+      padding-left: 0;
+      width: 50%;
+      display: flex;
+      gap: clamp(8px, 1vw, 45px);
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+
+      @media screen and (max-width: 600px) {
+        width: 100%;
+        flex: 1;
+        padding-left: $padding-20;
+        padding-top: 0;
+      }
+
+      .container {
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(8px, 1vw, 30px);
+
+        .bold {
+          font-weight: 700;
+        }
+
+        .deal_4for3_container {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+
+          .deal_4for3 {
+            display: flex;
+            flex-direction: column;
+            font-size: $font-20;
+
+            .code {
+              font-size: $font-20;
+            }
+
+            .mobile {
+              font-size: $font-20;
+              display: none;
+            }
+
+            @media screen and (max-width: 600px) {
+              .mobile {
+                display: block;
+              }
+
+              .desktop {
+                display: none;
+              }
+            }
+          }
+        }
+
+        .offpercentage {
+          font-size: $font-100;
+          line-height: $line-100;
+          font-weight: 600;
+
+          @media screen and (max-width: 600px) {
+            // font-size: 25px;
+          }
+        }
+
+        .category_title {
+          font-size: $font-40;
+          line-height: $line-40;
+        }
+
+        .title {
+          display: flex;
+          flex-direction: column;
+          font-size: $font-50;
+          font-weight: 600;
+          line-height: $line-50;
+        }
+
+        .subtitle,
+        .code {
+          font-size: $font-25;
+          line-height: $line-25;
+        }
+
+        .code {
+          user-select: text;
+        }
+      }
+
+      .footer {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .onlyToday {
+          font-weight: 600;
+          font-size: $font-25;
+          line-height: $line-25;
+
+          @media screen and (max-width: 600px) {
+            font-weight: 500;
+          }
+        }
+
+        .seeConditions {
+          border: none;
+          background: none;
+          color: #750000;
+          cursor: pointer;
+          font-weight: 400;
+          font-size: $font-25;
+          line-height: $line-25;
+          text-decoration-line: underline;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes popupOpen {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popupClose {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}

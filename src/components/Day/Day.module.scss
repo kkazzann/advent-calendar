@@ -1,0 +1,17 @@
+.day {
+  display: flex;
+  overflow: hidden;
+
+  &.past {
+    cursor: auto;
+  }
+
+  &.future {
+    cursor: not-allowed;
+    opacity: 0.3;
+  }
+
+  &.present {
+    cursor: pointer;
+  }
+}

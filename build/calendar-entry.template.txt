@@ -1,0 +1,23 @@
+import React from "react";
+import { createRoot } from "react-dom/client";
+import Advent from "./src/Advent";
+import "./src/global.scss";
+import type { PopupTranslations } from "./src/types/PopupTranslations";
+import type { ConditionsTranslations } from "./src/types/ConditionsTranslations";
+
+// This file will be generated dynamically for each country
+// COUNTRY_CODE will be replaced during build
+const COUNTRY = "{{COUNTRY_CODE}}";
+
+// TRANSLATIONS will be replaced during build
+const POPUP_TRANSLATIONS: PopupTranslations = {{POPUP_TRANSLATIONS}} as any;
+const CONDITIONS_TRANSLATIONS: ConditionsTranslations = {{CONDITIONS_TRANSLATIONS}} as any;
+
+const root = createRoot(document.getElementById("root")!);
+root.render(
+  <Advent
+    country={COUNTRY}
+    popupTranslations={POPUP_TRANSLATIONS}
+    conditionsTranslations={CONDITIONS_TRANSLATIONS}
+  />
+);

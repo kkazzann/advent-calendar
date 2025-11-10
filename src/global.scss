@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+$soft-peach: #ffccb7;
+
+* {
+  box-sizing: border-box !important;
+}
+
+.gap-20 {
+  gap: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .gap-20 {
+    gap: 10px;
+  }
+}
