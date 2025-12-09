@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "bun run build-calendars.js"
+    "build": "bun run build/build-calendars.js"
   },
   "devDependencies": {
     "@types/bun": "latest",

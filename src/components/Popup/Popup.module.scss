@@ -1,11 +1,12 @@
-$font-100: clamp(25px, 5vw, 48px);
-$font-50: clamp(25px, 5vw, 42px);
-$font-40: clamp(25px, 4vw, 36px);
-$font-25: clamp(12px, 2vw, 25px);
+// $font-100: clamp(25px, 5vw, 48px);
+$font-100: clamp(24px, 4vw, 60px);
+$font-50: clamp(24px, 4vw, 50px);
+$font-40: clamp(24px, 4vw, 40px);
+$font-25: clamp(16px, 2vw, 25px);
 $font-20: clamp(12px, 2vw, 20px);
 
 $line-100: 1;
-$line-50: 1;
+$line-50: 1.1;
 $line-40: 1.2;
 $line-25: 1.2;
 
@@ -19,7 +20,7 @@ $padding-20: clamp(10px, 2vw, 20px);
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
+  z-index: 9999 !important;
 
   display: flex;
   justify-content: center;
@@ -33,10 +34,27 @@ $padding-20: clamp(10px, 2vw, 20px);
 
   &._4_for_3 {
     .content {
+      /* expose font size variables so we can override per-country at runtime */
+      --font-100: #{$font-100};
+      --font-50: #{$font-50};
+      --font-40: #{$font-40};
+      --font-25: #{$font-25};
+      --font-20: #{$font-20};
+
       @media screen and (max-width: 600px) {
         max-height: fit-content !important;
       }
     }
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  // anchor that wraps image+deal when a clickable category is available
+  .popupLink {
+    color: inherit;
+    text-decoration: none;
   }
 
   .content {
@@ -61,7 +79,10 @@ $padding-20: clamp(10px, 2vw, 20px);
 
     @media screen and (max-width: 600px) {
       flex-direction: column;
-      max-height: 460px;
+      // max-height: 460px;
+      min-height: 460px;
+      max-height: unset;
+      height: auto;
       max-width: 257px;
     }
 
@@ -154,14 +175,14 @@ $padding-20: clamp(10px, 2vw, 20px);
           .deal_4for3 {
             display: flex;
             flex-direction: column;
-            font-size: $font-20;
+            font-size: var(--font-20, #{$font-20});
 
             .code {
-              font-size: $font-20;
+              font-size: var(--font-20, #{$font-20});
             }
 
             .mobile {
-              font-size: $font-20;
+              font-size: var(--font-20, #{$font-20});
               display: none;
             }
 
@@ -178,7 +199,7 @@ $padding-20: clamp(10px, 2vw, 20px);
         }
 
         .offpercentage {
-          font-size: $font-100;
+          font-size: var(--font-100, #{$font-100});
           line-height: $line-100;
           font-weight: 600;
 
@@ -188,26 +209,50 @@ $padding-20: clamp(10px, 2vw, 20px);
         }
 
         .category_title {
-          font-size: $font-40;
+          font-size: var(--font-40, #{$font-40});
           line-height: $line-40;
         }
 
         .title {
+          gap: 4px;
           display: flex;
           flex-direction: column;
-          font-size: $font-50;
+          font-size: var(--font-50, #{$font-50});
           font-weight: 600;
           line-height: $line-50;
         }
 
         .subtitle,
         .code {
-          font-size: $font-25;
+          font-size: var(--font-25, #{$font-25});
           line-height: $line-25;
         }
 
-        .code {
+        .codeBlock {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          justify-content: center;
+        }
+
+        .codeValue {
           user-select: text;
+        }
+
+        .copyBtn {
+          background: none;
+          border: none;
+          padding: 4px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .copyBtn img {
+          width: 18px;
+          height: 18px;
+          display: block;
         }
       }
 

@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import { fetchAndMergeDynamicTranslations } from './fetch-dynamic-translations.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,15 +42,51 @@ async function buildCalendar(
     cwd: rootDir,
   });
 
-  // Rename output file
-  const builtFile = path.join(rootDir, 'dist-calendar', 'calendar.html');
-  const outputFile = path.join(rootDir, 'dist-calendar', `${country}.html`);
+  // Rename output file - Vite may put calendar.html under a subfolder (eg. dist-calendar/build/calendar.html)
+  const distDir = path.join(rootDir, 'dist-calendar');
+  // helper: recursively find calendar.html inside distDir
+  async function findBuiltFile(dir) {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isFile() && entry.name === 'calendar.html') return full;
+      if (entry.isDirectory()) {
+        const found = await findBuiltFile(full);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+
+  const builtFile = await findBuiltFile(distDir);
+  if (!builtFile) {
+    // list dist folder for debugging
+    const list = (await (async function listDir(d) {
+      try {
+        return await fs.readdir(d);
+      } catch (e) {
+        return [];
+      }
+    })(distDir)).join(', ');
+    throw new Error(
+      `Built file not found. Checked ${distDir}. Contents: ${list}`,
+    );
+  }
+
+  const outputFile = path.join(distDir, `${country}.html`);
   await fs.rename(builtFile, outputFile);
 
   console.log(`✅ Built: dist-calendar/${country}.html\n`);
 }
 
 async function buildAllCountries() {
+  // Merge dynamic translations into countries-data.json before building
+  try {
+    await fetchAndMergeDynamicTranslations();
+  } catch (e) {
+    console.warn('Warning: dynamic translations merge failed, continuing with existing file.');
+  }
+
   const countriesDataPath = path.join(__dirname, 'countries-data.json');
   const data = JSON.parse(await fs.readFile(countriesDataPath, 'utf-8'));
 
@@ -68,9 +105,13 @@ async function buildAllCountries() {
     await buildCalendar(country, translations.popups, translations.conditions);
   }
 
-  // Cleanup
-  const entryPath = path.join(__dirname, 'calendar-entry.tsx');
-  await fs.unlink(entryPath);
+  // Cleanup - remove temporary entry file from project root if it exists
+  const entryPath = path.join(rootDir, 'calendar-entry.tsx');
+  try {
+    await fs.unlink(entryPath);
+  } catch (e) {
+    // ignore if file does not exist
+  }
 
   console.log(
     `\n🎉 All ${Object.keys(data).length} calendars built successfully!`,

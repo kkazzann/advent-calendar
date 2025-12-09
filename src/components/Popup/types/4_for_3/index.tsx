@@ -1,5 +1,6 @@
 import styles from '../../Popup.module.scss';
 import type { FourForThreePopup } from '../index';
+import CodeBlock from '../../CodeBlock';
 
 interface Props {
   data: FourForThreePopup;
@@ -55,7 +56,8 @@ export const FourForThreeLayout = ({ data }: Props) => {
             }}
           ></div>
 
-          <div className={styles.code}>{data.code_2}</div>
+          {/* code 2  */}
+          <CodeBlock raw={data.code_2 || ''} />
         </div>
 
         {/* buy 3 */}
@@ -74,7 +76,7 @@ export const FourForThreeLayout = ({ data }: Props) => {
             }}
           ></div>
 
-          <div className={styles.code}>{data.code_3}</div>
+          <CodeBlock raw={data.code_3 || ''} />
         </div>
 
         {/* buy 4 */}
@@ -93,7 +95,7 @@ export const FourForThreeLayout = ({ data }: Props) => {
             }}
           ></div>
 
-          <div className={styles.code}>{data.code_4}</div>
+          <CodeBlock raw={data.code_4 || ''} />
         </div>
       </div>
     </div>

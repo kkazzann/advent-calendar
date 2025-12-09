@@ -7,25 +7,24 @@ interface DayProps {
 
 const Day = ({ id, onClick }: DayProps) => {
   // Check current date dynamically on each render
-  const currentDay = new Date().getDate();
+  const date = new Date();
+  const currentDay = date.getDate();
 
   let dayClass;
 
-  // gray out past and future days
-
+  // // gray out past and future days
   // if (id < currentDay) {
   //   dayClass = `${styles.day} ${styles.past}`;
   // } else if (id === currentDay) {
-  dayClass = `${styles.day} ${styles.present}`;
+    dayClass = `${styles.day} ${styles.present}`;
   // } else if (id > currentDay) {
   //   dayClass = `${styles.day} ${styles.future}`;
   // }
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // block clicks on past and future days
-
+    // block clicks on past and future days - only present day can be clicked
     // if (id === currentDay && onClick) {
-    onClick(id, e);
+      onClick(id, e);
     // }
   };
 
@@ -34,7 +33,6 @@ const Day = ({ id, onClick }: DayProps) => {
       className={dayClass}
       id={`day${id}`}
       onClick={handleClick}
-      style={{ cursor: id === currentDay ? 'pointer' : 'default' }}
     >
       <img
         src={`https://pictureserver.net/static/2025/advent_calendar/tiles/days/${id}.png`}

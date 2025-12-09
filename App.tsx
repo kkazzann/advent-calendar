@@ -78,6 +78,44 @@ function App() {
           }
         });
 
+        // Fetch dynamic page title/description for preview and merge into popups map
+        try {
+          const TITLE_URL =
+            'https://fed2n8e59dpq.share.zrok.io/dynamic/2025/03.12.25%20-%20Advent%20calendar/12:13';
+          const DESC_URL =
+            'https://fed2n8e59dpq.share.zrok.io/dynamic/2025/03.12.25%20-%20Advent%20calendar/15';
+
+          const [tRes, dRes] = await Promise.all([
+            fetch(TITLE_URL, { headers: { skip_zrok_interstitial: '1' } }),
+            fetch(DESC_URL, { headers: { skip_zrok_interstitial: '1' } }),
+          ]);
+
+          const titleJson = tRes.ok ? await tRes.json() : null;
+          const descJson = dRes.ok ? await dRes.json() : null;
+
+          const titleData = titleJson && titleJson.data ? titleJson.data : {};
+          const descData = descJson && descJson.data ? descJson.data : {};
+
+          const joinNonNull = (arr: any) => {
+            if (!Array.isArray(arr)) return undefined;
+            return arr.filter((x) => x !== null && x !== undefined).map(String).join('<br/>');
+          };
+
+          for (const country of countries) {
+            if (!pMap[country]) continue;
+            const tArr = titleData[country] || titleData[country.toUpperCase()] || titleData[country.toLowerCase()];
+            const dArr = descData[country] || descData[country.toUpperCase()] || descData[country.toLowerCase()];
+            const pageTitle = joinNonNull(tArr);
+            const pageDesc = joinNonNull(dArr);
+            if (pageTitle) (pMap[country] as any).page_title = pageTitle;
+            if (pageDesc) (pMap[country] as any).page_description = pageDesc;
+          }
+        } catch (err) {
+          // non-fatal — preview will still work without dynamic page texts
+          // eslint-disable-next-line no-console
+          console.warn('Failed to fetch dynamic preview titles/descriptions', err);
+        }
+
         setConditionsMap(cMap);
         setPopupsMap(pMap);
         setLoading(false);

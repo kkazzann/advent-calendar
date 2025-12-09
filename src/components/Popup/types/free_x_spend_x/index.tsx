@@ -1,5 +1,7 @@
 import styles from '../../Popup.module.scss';
+import CodeBlock from '../../CodeBlock';
 import type { FreeXSpendXPopup } from '../index';
+import { Fragment } from 'react';
 
 interface Props {
   data: FreeXSpendXPopup;
@@ -17,11 +19,24 @@ export const FreeXSpendXLayout = ({ data }: Props) => {
       />
 
       <div className={styles.subtitle}>
-        {data.spend_amount || 'translations not found'}
+        {(() => {
+          const raw = data.spend_amount || '';
+          // Split on <br />, <br> (case-insensitive) and render real line breaks
+          const parts = raw.split(/<br\s*\/?\s*>/i).map((s) => s.trim());
+          if (parts.length === 0) return 'translations not found';
+          return (
+            <>
+              {parts.map((part, idx) => (
+                <Fragment key={idx}>
+                  {part}
+                  {idx < parts.length - 1 && <br />}
+                </Fragment>
+              ))}
+            </>
+          );
+        })()}
 
-        <div className={styles.code}>
-          {data.code_xxx || 'translations not found'}
-        </div>
+        <CodeBlock raw={data.code_xxx || ''} />
       </div>
     </div>
   );

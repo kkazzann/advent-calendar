@@ -28,19 +28,29 @@
 
     .title {
       font-size: 45px;
-      line-height: 53px;
+      line-height: 1;
       font-weight: 400;
       text-align: center;
-      padding: 20px 0;
+      padding-block: 35px;
+
+      @media screen and (max-width: 600px) {
+        font-size: 30px;
+        line-height: 35px;
+        padding-block: 20px;
+      }
     }
 
     .description {
       font-size: 18px;
-      line-height: 21.6px;
+      line-height: 1.2;
       font-weight: 400;
-      margin-top: 15px;
-      margin-bottom: 35px;
+      padding-block-end: 35px;
       text-align: center;
+
+      @media screen and (max-width: 600px) {
+        font-size: 16px;
+        padding-block-end: 20px;
+      }
     }
   }
 

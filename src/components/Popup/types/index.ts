@@ -11,6 +11,9 @@ export interface UpToXOffPopup extends BasePopupData {
   type: 'up_to_x_off';
   category_title: string;
   deal: string;
+  // optional URL to the category / shop page — if present the popup (except code/conditions)
+  // can link to this URL
+  link?: string;
 }
 
 // free_x_spend_x: Free item with minimum spend (04, 05, 06, 07, 09, 10, 13, 16, 17, 20, 22, 23)

@@ -1,43 +1,57 @@
 import type { PopupTranslations } from '../../types/PopupTranslations';
 import type { PopupData } from './types';
 
+// unused...
 // Image mapping (6 images recycled)
-export const POPUP_IMAGES = {
-  1: '1dev_v3',
-  2: '2dev_v3',
-  3: '3dev_v3',
-  4: '4dev_v3',
-  5: '5dev_v3',
-  6: '6dev_v3',
-} as const;
+export const POPUP_IMAGES: Record<number, 'png' | 'gif'> = {
+  3: 'png',
+  4: 'png',
+  5: 'gif',
+  6: 'gif',
+  7: 'gif',
+  8: 'png',
+  9: 'png',
+  10: 'png',
+  11: 'png',
+  12: 'png',
+  13: 'gif',
+  14: 'png',
+  15: 'png',
+  16: 'gif',
+  17: 'gif',
+  18: 'png',
+  19: 'png',
+  20: 'gif',
+  21: 'png',
+  22: 'gif',
+  23: 'gif',
+  24: 'png',
+};
 
 // Day to popup type mapping
-export const DAY_POPUP_CONFIG: Record<
-  number,
-  { type: PopupData['type']; image: keyof typeof POPUP_IMAGES }
-> = {
-  3: { type: 'up_to_x_off', image: 1 },
-  4: { type: 'free_x_spend_x', image: 2 },
-  5: { type: 'free_x_spend_x', image: 2 },
-  6: { type: 'free_x_spend_x', image: 2 },
-  7: { type: 'free_x_spend_x', image: 2 },
-  8: { type: 'up_to_x_off', image: 1 },
-  9: { type: 'free_x_spend_x', image: 2 },
-  10: { type: 'free_x_spend_x', image: 2 },
-  11: { type: 'extra_x_off', image: 3 },
-  12: { type: '4_for_3', image: 4 },
-  13: { type: 'free_x_spend_x', image: 2 },
-  14: { type: 'up_to_x_off', image: 1 },
-  15: { type: 'cashback', image: 5 },
-  16: { type: 'free_x_spend_x', image: 2 },
-  17: { type: 'free_x_spend_x', image: 2 },
-  18: { type: 'up_to_x_off', image: 1 },
-  19: { type: 'up_to_x_off', image: 1 },
-  20: { type: 'free_x_spend_x', image: 2 },
-  21: { type: 'discount', image: 6 },
-  22: { type: 'free_x_spend_x', image: 2 },
-  23: { type: 'free_x_spend_x', image: 2 },
-  24: { type: 'up_to_x_off', image: 1 },
+export const DAY_POPUP_CONFIG: Record<number, { type: PopupData['type'] }> = {
+  3: { type: 'up_to_x_off' },
+  4: { type: 'free_x_spend_x' },
+  5: { type: 'free_x_spend_x' },
+  6: { type: 'free_x_spend_x' },
+  7: { type: 'free_x_spend_x' },
+  8: { type: 'up_to_x_off' },
+  9: { type: 'free_x_spend_x' },
+  10: { type: 'free_x_spend_x' },
+  11: { type: 'extra_x_off' },
+  12: { type: '4_for_3' },
+  13: { type: 'free_x_spend_x' },
+  14: { type: 'up_to_x_off' },
+  15: { type: 'cashback' },
+  16: { type: 'free_x_spend_x' },
+  17: { type: 'free_x_spend_x' },
+  18: { type: 'up_to_x_off' },
+  19: { type: 'up_to_x_off' },
+  20: { type: 'free_x_spend_x' },
+  21: { type: 'discount' },
+  22: { type: 'free_x_spend_x' },
+  23: { type: 'free_x_spend_x' },
+  24: { type: 'up_to_x_off' },
 };
 
 // Mapping for free_x_spend_x deal names (varies per day)
@@ -73,13 +87,25 @@ const FREE_X_SPEND_X_SPEND_KEYS: Record<number, string> = {
 };
 
 // Mapping for up_to_x_off category names
-const UP_TO_X_OFF_CATEGORY_KEYS: Record<number, string> = {
+export const UP_TO_X_OFF_CATEGORY_KEYS: Record<number, string> = {
   3: 'christmas_accessories',
   8: 'textiles',
   14: 'kids_room',
   18: 'tableware',
   19: 'rugs',
   24: 'dining_room',
+};
+
+// Explicit API keys (slugs) used by the category links service.
+// These often differ from the human-readable translation keys above.
+// Edit these to match the API's keys exactly (hyphenated, nested, etc.).
+export const UP_TO_X_OFF_CATEGORY_LINKS: Record<number, string> = {
+  3: '/christmas-shop/christmas-accessories/',
+  8: '/textiles/',
+  14: '/children-room/',
+  18: '/home-accessories/kitchenware-tableware/',
+  19: '/rugs/',
+  24: '/dining-room-furniture/',
 };
 
 // Mapping days to condition keys from ConditionsTranslations
@@ -113,7 +139,7 @@ const DAY_CONDITION_KEYS: Record<
 
 // Get the condition key for a specific day
 export function getConditionKey(
-  day: number,
+  day: number
 ): keyof import('../../types/ConditionsTranslations').ConditionsTranslations {
   return DAY_CONDITION_KEYS[day] || 'regular';
 }
@@ -121,6 +147,8 @@ export function getConditionKey(
 export function getPopupData(
   day: number,
   translations: PopupTranslations,
+  popupLinks?: Record<number, string>,
+  origin?: string
 ): PopupData | null {
   // console.log("Getting popup data for day:", day, DAY_POPUP_CONFIG[day]);
   const config = DAY_POPUP_CONFIG[day];
@@ -130,13 +158,15 @@ export function getPopupData(
   }
 
   const dayStr = day.toString().padStart(2, '0');
+
+  const imageBase =
+    'https://pictureserver.net/static/2025/advent_calendar/popup/new/';
+
+  const imageVersion = '?ver=10';
+
   const baseData = {
-    imageDesktop: `https://pictureserver.net/static/2025/advent_calendar/popup/${
-      POPUP_IMAGES[config.image]
-    }_desktop.png`,
-    imageMobile: `https://pictureserver.net/static/2025/advent_calendar/popup/${
-      POPUP_IMAGES[config.image]
-    }_mobile.png`,
+    imageDesktop: `${imageBase}day${day}_desktop.${POPUP_IMAGES[day]}${imageVersion}`,
+    imageMobile: `${imageBase}day${day}_mobile.${POPUP_IMAGES[day]}${imageVersion}`,
     only_today: translations.only_today,
     see_conditions: translations.see_conditions,
   };
@@ -150,6 +180,48 @@ export function getPopupData(
         return null;
       }
 
+      // try to find a link/url in translations for this day (if present)
+      const possibleLinkKeys = [
+        `${dayStr}12__link`,
+        `${dayStr}12__url`,
+        `${dayStr}12__shop_link`,
+        `${dayStr}12__shop_url`,
+        `${dayStr}12__category_url`,
+      ] as const;
+
+      let link: string | undefined = undefined;
+      for (const k of possibleLinkKeys) {
+        const v = translations[k as keyof PopupTranslations] as unknown as
+          | string
+          | undefined;
+        if (v && v.trim()) {
+          // sanitize: ensure it looks like a URL (very permissive)
+          if (/^https?:\/\//i.test(v.trim())) {
+            link = v.trim();
+            break;
+          }
+          // allow protocol-relative or site-root paths as well
+          if (/^\//.test(v.trim()) || /^\w+:/.test(v.trim())) {
+            link = v.trim();
+            break;
+          }
+        }
+      }
+
+      // if translations didn't include a full link, fallback to popupLinks map
+      if (!link && popupLinks && popupLinks[day]) {
+        const p = popupLinks[day];
+        const base =
+          origin || (typeof window !== 'undefined' ? window.origin : '');
+        if (base) {
+          // ensure no duplicate slashes
+          link = base.replace(/\/$/, '') + (p.startsWith('/') ? p : '/' + p);
+        } else {
+          // fallback to relative path
+          link = p;
+        }
+      }
+
       return {
         type: 'up_to_x_off',
         ...baseData,
@@ -161,6 +233,7 @@ export function getPopupData(
           (translations[
             `${dayStr}12__up_to_50_off` as keyof PopupTranslations
           ] as string) || '',
+        link,
       };
 
     case 'free_x_spend_x':
